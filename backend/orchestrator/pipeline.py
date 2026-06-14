@@ -1,11 +1,8 @@
 def run_pipeline(data):
-    print("Agent A running")
-    print("Agent B running")
-    print("Agent C running")
-    print("Agent D running")
-    print("Agent H running")
+    a = {"merchant": "Test"}
+    b = {"total": 100}
+    c = {"status": "OK"}
+    d = c
+    h = {"decision": "APPROVED"}
 
-    return {
-        "status": "completed",
-        "result": "APPROVED"
-    }
+    return h
