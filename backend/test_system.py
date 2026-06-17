@@ -43,7 +43,8 @@ def test_pipeline_flow():
         print("\n--- [STEP 3] Testing Core Agent Pipeline (/run) ---")
         print(f"Sending processing request for targeting space: {run_id}...")
         
-        run_res = requests.post(f"{BASE_URL}/run?run_id={run_id}")
+        target_url = f"{BASE_URL}/run?run_id={run_id}&employee_id=EMP_DIELLONA_99&cost_center=RND"
+        run_res = requests.post(target_url)
         
         print("Status Code:", run_res.status_code)
         print("Pipeline Execution Response:", run_res.json())

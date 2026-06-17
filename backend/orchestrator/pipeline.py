@@ -6,6 +6,7 @@ from langgraph.graph import StateGraph, END
 class PipelineState(TypedDict):
     run_id: str
     base_path: str
+    inputs: Dict[str, Any]
     context: Dict[str, Any]
     extracted: Dict[str, Any]
     compliance: Dict[str, Any]
@@ -19,13 +20,14 @@ def save_json(path, filename, data):
         json.dump(data, f, indent=4)
 
 def agent_a_context(state: PipelineState):
+    runtime_inputs = state.get("inputs", {})
     context = {
-        "employee_id": "EMP001",
-        "cost_center": "IT",
+        "employee_id": runtime_inputs.get("employee_id", "UNKNOWN"),
+        "cost_center": runtime_inputs.get("cost_center", "UNASSIGNED"),
         "policy_profile": "STANDARD",
         "status": "processing"
     }
-    save_json(state["base_path"], "context.json", context)
+    save_json(state["base_path"], "context_packet.json", context)
     return {"context": context}
 
 def agent_b_extract(state: PipelineState):
@@ -62,7 +64,18 @@ def agent_e_duplicate(state: PipelineState):
         "similarity_score": 0.0,
         "matched_run_id": None
     }
-    save_json(state["base_path"], "duplicate_results.json", duplicate_check)
+    
+    md_content = f"""# DUPLICATE DETECTION REPORT
+=========================================
+RUN ID: {state['run_id']}
+IS DUPLICATE: {duplicate_check['is_duplicate']}
+SIMILARITY SCORE: {duplicate_check['similarity_score']}
+=========================================
+"""
+    os.makedirs(state["base_path"], exist_ok=True)
+    with open(f"{state['base_path']}/duplicates.md", "w") as f:
+        f.write(md_content)
+        
     return {"duplicate_check": duplicate_check}
 
 def generate_audit_log(base_path, run_id, context, extracted, compliance, normalized, duplicate_check, decision):
@@ -118,6 +131,27 @@ def generate_erp_payload(base_path, run_id, extracted, normalized, decision):
     with open(f"{base_path}/posting_payload.json", "w") as f:
         json.dump(erp_data, f, indent=4)
 
+def generate_exceptions_log(base_path, run_id, decision, compliance, duplicate_check):
+    if decision in ["MANUAL_REVIEW", "REJECT"]:
+        content = f"""# IEEMS EXCEPTION REPORT
+=========================================
+RUN ID: {run_id}
+TRIAGE STATUS: {decision}
+=========================================
+The execution pipeline halted normal automated posting for this run.
+
+### Exception Factors Triggered:
+"""
+        if compliance.get("violations"):
+            content += "- [POLICY]: System flagged operational compliance policy violations.\n"
+        if duplicate_check.get("is_duplicate"):
+            content += "- [DUPLICATE]: Anti-fraud heuristic discovered a matching historical record.\n"
+        if not compliance.get("violations") and not duplicate_check.get("is_duplicate"):
+            content += "- [THRESHOLD]: Evaluation exceeded automated clearance value constraints.\n"
+            
+        with open(f"{base_path}/exceptions.md", "w") as f:
+            f.write(content)
+
 def agent_h_decision(state: PipelineState):
     compliance = state["compliance"]
     normalized = state["normalized"]
@@ -157,6 +191,13 @@ def agent_h_decision(state: PipelineState):
         normalized, 
         decision
     )
+    generate_exceptions_log(
+        state["base_path"],
+        state["run_id"],
+        decision,
+        compliance,
+        duplicate_check
+    )
     
     return {"decision": decision}
 
@@ -184,6 +225,10 @@ def run_pipeline(data):
     initial_state = {
         "run_id": run_id,
         "base_path": base_path,
+        "inputs": {
+            "employee_id": data.get("employee_id"),
+            "cost_center": data.get("cost_center")
+        },
         "context": {},
         "extracted": {},
         "compliance": {},

@@ -1,0 +1,30 @@
+{
+    "run_id": "run_b081c7",
+    "context": {
+        "employee_id": "EMP_DIELLONA_99",
+        "cost_center": "RND",
+        "policy_profile": "STANDARD",
+        "status": "processing"
+    },
+    "extracted": {
+        "vendor": "Restaurant ABC",
+        "amount": 25,
+        "currency": "EUR",
+        "date": "2026-06-16"
+    },
+    "compliance": {
+        "status": "OK",
+        "violations": []
+    },
+    "normalized": {
+        "original_amount": 25,
+        "currency": "EUR",
+        "amount_usd": 27
+    },
+    "duplicate_check": {
+        "is_duplicate": false,
+        "similarity_score": 0.0,
+        "matched_run_id": null
+    },
+    "decision": "APPROVE"
+}
