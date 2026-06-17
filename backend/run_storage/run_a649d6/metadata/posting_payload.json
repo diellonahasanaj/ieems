@@ -1,0 +1,8 @@
+{
+    "transaction_id": "run_a649d6",
+    "gl_account": "520100",
+    "amount": 27,
+    "currency": "USD",
+    "vendor_clean": "RESTAURANT ABC",
+    "status": "READY_FOR_POSTING"
+}

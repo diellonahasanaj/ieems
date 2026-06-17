@@ -1,0 +1,25 @@
+{
+    "run_id": "run_37c571",
+    "context": {
+        "employee_id": "EMP001",
+        "cost_center": "IT",
+        "policy_profile": "STANDARD",
+        "status": "processing"
+    },
+    "extracted": {
+        "vendor": "Restaurant ABC",
+        "amount": 25,
+        "currency": "EUR",
+        "date": "2026-06-16"
+    },
+    "compliance": {
+        "status": "OK",
+        "violations": []
+    },
+    "normalized": {
+        "original_amount": 25,
+        "currency": "EUR",
+        "amount_usd": 27
+    },
+    "decision": "APPROVE"
+}
