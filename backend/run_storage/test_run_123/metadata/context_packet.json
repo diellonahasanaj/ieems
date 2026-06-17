@@ -1,0 +1,12 @@
+{
+    "employee_id": "EMP_DIELONA_01",
+    "cost_center": "RND",
+    "policy_profile": "TECHNICAL_RESEARCH_HIGH_LIMIT",
+    "document_classification": {
+        "file_name": "receipt.pdf",
+        "absolute_file_path": "C:\\Users\\ONA\\Desktop\\ieems\\backend\\run_storage\\test_run_123\\artifacts\\receipt.pdf",
+        "detected_format": "DIGITAL_PDF",
+        "is_supported": true
+    },
+    "system_status": "INTAKE_COMPLETE"
+}
