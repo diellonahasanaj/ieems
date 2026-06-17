@@ -1,38 +1,39 @@
-from fastapi import FastAPI, UploadFile
+import os
+import uuid
+from fastapi import FastAPI, UploadFile, File
 from orchestrator.pipeline import run_pipeline
 
 app = FastAPI()
+
+# --- NEW: Define the missing function ---
+def get_next_run_id():
+    # Generates a short, unique ID like 'run_a1b2c3'
+    unique_suffix = uuid.uuid4().hex[:6]
+    return f"run_{unique_suffix}"
 
 @app.get("/")
 def home():
     return {"message": "IEEMS backend running"}
 
-import os
-from fastapi import UploadFile, File
-
 @app.post("/upload")
-def upload(file: UploadFile = File(...)):
-    try:
-        path = "run_storage/run_001/artifacts"
-        os.makedirs(path, exist_ok=True)
+def upload(file: UploadFile):
+    run_id = get_next_run_id()
 
-        file_location = os.path.join(path, file.filename)
+    path = f"run_storage/{run_id}/artifacts"
+    os.makedirs(path, exist_ok=True)
 
-        with open(file_location, "wb") as f:
-            f.write(file.file.read())
+    file_path = f"{path}/{file.filename}"
 
-        return {
-            "filename": file.filename,
-            "status": "saved",
-            "path": file_location
-        }
+    with open(file_path, "wb") as f:
+        f.write(file.file.read())
 
-    except Exception as e:
-        return {
-            "error": str(e)
-        }
+    return {
+        "run_id": run_id,
+        "filename": file.filename,
+        "status": "saved"
+    }
 
 @app.post("/run")
-def run():
-    result = run_pipeline({"dummy": True})
+def run(run_id: str):
+    result = run_pipeline({"run_id": run_id})
     return result
