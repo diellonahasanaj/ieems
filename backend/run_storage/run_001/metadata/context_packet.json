@@ -1,0 +1,12 @@
+{
+    "employee_id": "EMP001",
+    "cost_center": "SALES",
+    "policy_profile": "TRAVEL_ENTERTAINMENT_FLEX",
+    "document_classification": {
+        "file_name": "test.png",
+        "absolute_file_path": "C:\\Users\\Admin\\OneDrive\\Desktop\\CAPSTONE_MAIN\\ieems\\backend\\run_storage\\run_001\\artifacts\\test.png",
+        "detected_format": "RECEIPT_IMAGE",
+        "is_supported": true
+    },
+    "system_status": "INTAKE_COMPLETE"
+}
