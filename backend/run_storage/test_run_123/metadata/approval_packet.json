@@ -1,0 +1,10 @@
+{
+    "run_id": "test_run_123",
+    "employee_id": null,
+    "final_decision": "APPROVED",
+    "reason": "All automated agent checks passed successfully.",
+    "metrics": {
+        "total_amount": 0.0,
+        "currency": "EUR"
+    }
+}
