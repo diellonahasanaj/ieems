@@ -19,7 +19,7 @@ The system securely orchestrates data through a state-driven graph using 6 speci
 ## 🚀 How to Run
 
 ### 1. Install Dependencies
-pip install fastapi uvicorn langgraph opencv-python easyocr pandas pillow
+pip install fastapi uvicorn langgraph opencv-python easyocr pandas pillow rapidfuzz requests
 2. Start the Server
 uvicorn main:app --reload
 3. Test via Swagger UI
